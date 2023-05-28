@@ -20,6 +20,24 @@ Nonogram::Grid::Grid(const vec2d &values) {
     }
 }
 
+Nonogram::Grid::Grid(const Nonogram::Grid &from) {
+    vec2d data;
+    std::copy(from.values->begin(), from.values->end(), std::back_inserter(data));
+
+    this->values = std::make_unique<vec2d>(data);
+    this->_size = from.size();
+}
+
+Nonogram::Grid &Nonogram::Grid::operator=(const Nonogram::Grid &from) {
+    vec2d data;
+    std::copy(from.values->begin(), from.values->end(), std::back_inserter(data));
+
+    this->values = std::make_unique<vec2d>(data);
+    this->_size = from.size();
+
+    return *this;
+}
+
 bool Nonogram::Grid::at(unsigned short x, unsigned short y) {
     if (x > this->_size || y > this->_size) {
         throw std::out_of_range("Out of bounds");
@@ -36,6 +54,14 @@ void Nonogram::Grid::set(unsigned short x, unsigned short y, bool value) {
     this->values->at(y)[x] = value;
 }
 
+bool Nonogram::Grid::flip(unsigned short x, unsigned short y) {
+    const bool value = !this->at(x, y);
+
+    this->set(x, y, value);
+
+    return value;
+}
+
 std::vector<bool> Nonogram::Grid::vertical(unsigned short index) {
     std::vector<bool> result;
 
@@ -48,5 +74,23 @@ std::vector<bool> Nonogram::Grid::vertical(unsigned short index) {
 
 std::vector<bool> Nonogram::Grid::horizontal(unsigned short index) {
     return this->values->at(index);
+}
+
+Nonogram::Grid Nonogram::Grid::random(unsigned short size, std::mt19937 rgen) {
+    vec2d values;
+
+    std::uniform_int_distribution<int> dist(0, 1);
+
+    for (unsigned short i = 0; i < size; i++) {
+        std::vector<bool> row;
+
+        for (unsigned short j = 0; j < size; j++) {
+            row.push_back(dist(rgen));
+        }
+
+        values.push_back(row);
+    }
+
+    return { values };
 }
 

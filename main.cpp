@@ -1,29 +1,32 @@
 #include <iostream>
+#include <memory>
+
 #include "src/Nonogram.h"
 #include "src/Loader/FileLoader.h"
 #include "src/Printer.h"
+#include "src/Heuristic/Hillclimb.h"
+#include "src/Heuristic/RandomHillclimb.h"
 
 using namespace std;
 
 int main() {
     Nonogram::FileLoader loader;
-    Nonogram::Nonogram simple = loader.load("data/simple.txt");
+    Nonogram::Nonogram problem = loader.load("data/simple.txt");
 
-    Nonogram::Grid solution(5);
-    solution.set(2, 0, true);
-    solution.set(1, 1, true);
-    solution.set(3, 1, true);
-    solution.set(0, 2, true);
-    solution.set(2, 2, true);
-    solution.set(4, 2, true);
-    solution.set(1, 3, true);
-    solution.set(3, 3, true);
-    solution.set(2, 4, true);
+    const int algo = 0;
+    unique_ptr<Nonogram::Heuristic> algorithm;
+
+    switch (algo) {
+        case 0: algorithm = make_unique<Nonogram::Hillclimb>(); break;
+        case 1: algorithm = make_unique<Nonogram::RandomHillclimb>(); break;
+    }
+
+    auto result = algorithm->solve(problem);
 
     Nonogram::Printer printer;
-    printer.print(&simple, &solution);
+    printer.print(&problem, &result.solution);
 
-    std::cout << "Errors: " << simple.verify(solution) << std::endl;
+    cout << "Errors: " << result.result << " in " << result.iterations << " iterations" << endl;
 
     return 0;
 }

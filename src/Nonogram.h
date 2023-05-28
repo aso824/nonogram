@@ -20,6 +20,8 @@ namespace Nonogram {
             std::vector<Line> getRows() { return this->rows; }
             std::vector<Line> getColumns() { return this->columns; }
 
+            unsigned short size() { return this->rows.size(); }
+
         private:
             Line bitsToLine(std::vector<bool> bits);
     };

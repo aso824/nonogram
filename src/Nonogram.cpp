@@ -20,7 +20,7 @@ Nonogram::Nonogram::Nonogram(std::vector<Line> rows, std::vector<Line> columns):
 
 unsigned short Nonogram::Nonogram::verify(Grid& solution) {
     if (solution.size() != this->rows.size()) {
-        throw std::invalid_argument("Grid sizes are not equal");
+        throw std::invalid_argument("Grid sizes are not equal - got " + std::to_string(solution.size()) + ", expected " + std::to_string(this->rows.size()));
     }
 
     unsigned short errors = 0;
