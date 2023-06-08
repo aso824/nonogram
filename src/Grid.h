@@ -4,6 +4,10 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <bitset>
 
 typedef std::vector<std::vector<bool>> vec2d;
 
@@ -17,6 +21,7 @@ namespace Nonogram {
             Grid(unsigned short size);
             Grid(const vec2d &values);
             Grid(const Grid &from);
+            Grid(const std::string hash, unsigned short size);
 
             Grid& operator=(const Grid& from);
 
@@ -28,6 +33,8 @@ namespace Nonogram {
             std::vector<bool> horizontal(unsigned short index);
 
             unsigned short size() const { return this->_size; }
+
+            std::string hash();
 
             static Grid random(unsigned short size, std::mt19937 rgen);
     };

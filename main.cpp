@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
     printer.print(&problem, &result.solution);
 
     cout << "Errors: " << result.result << " in " << result.iterations << " iterations" << endl;
+    cout << "Result hash: " << result.solution.hash() << endl;
 
     return 0;
 }
