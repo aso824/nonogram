@@ -7,6 +7,9 @@ Nonogram::HeuristicResult Nonogram::Hillclimb::solve(Nonogram &nonogram) {
     unsigned int iterations = 0;
     unsigned short errors = nonogram.verify(solution);
 
+    std::vector<std::pair<int, std::string>> history;
+    history.push_back(std::make_pair<int, std::string>(errors, solution.hash()));
+
     while (++iterations < MAX_ITERATIONS) {
         auto neighbours = this->permute(solution);
         bool changed = false;
@@ -18,6 +21,7 @@ Nonogram::HeuristicResult Nonogram::Hillclimb::solve(Nonogram &nonogram) {
                 solution = candidate;
                 errors = newErrors;
                 changed = true;
+                history.push_back(std::make_pair<int, std::string>(errors, solution.hash()));
             }
 
             if (newErrors == 0) {
@@ -31,7 +35,7 @@ Nonogram::HeuristicResult Nonogram::Hillclimb::solve(Nonogram &nonogram) {
         }
     }
 
-    return { solution, iterations, errors };
+    return { solution, errors, history };
 }
 
 std::unique_ptr<std::vector<Nonogram::Grid>> Nonogram::Hillclimb::permute(Grid grid) {

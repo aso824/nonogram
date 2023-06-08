@@ -2,6 +2,9 @@
 #define NONOGRAM_HEURISTIC_H
 
 #include <random>
+#include <vector>
+#include <utility>
+#include <string>
 
 #include "../Nonogram.h"
 #include "../Grid.h"
@@ -9,8 +12,8 @@
 namespace Nonogram {
     struct HeuristicResult {
         Grid solution;
-        unsigned int iterations;
         unsigned short result;
+        std::vector<std::pair<int, std::string>> history;
     };
 
     class Heuristic {

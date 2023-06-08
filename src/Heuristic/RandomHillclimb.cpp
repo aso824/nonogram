@@ -8,6 +8,9 @@ namespace Nonogram {
         unsigned int iterations = 0;
         unsigned short errors = nonogram.verify(solution);
 
+        std::vector<std::pair<int, std::string>> history;
+        history.push_back(std::make_pair<int, std::string>(errors, solution.hash()));
+
         while (++iterations < MAX_ITERATIONS) {
             Grid modified = this->randomModify(solution);
             unsigned short newErrors = nonogram.verify(modified);
@@ -15,6 +18,7 @@ namespace Nonogram {
             if (newErrors < errors) {
                 solution = modified;
                 errors = newErrors;
+                history.push_back(std::make_pair<int, std::string>(errors, solution.hash()));
             }
 
             if (newErrors == 0) {
@@ -22,7 +26,7 @@ namespace Nonogram {
             }
         }
 
-        return { solution, iterations, errors };
+        return { solution, errors, history };
     }
 
     Grid RandomHillclimb::randomModify(Grid solution) {

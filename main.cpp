@@ -13,7 +13,7 @@ using namespace std;
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        cout << "Usage: nonogram [file] [algorithm]" << endl;
+        cout << "Usage: nonogram [file] [algorithm] [--steps]" << endl;
 
         return 1;
     }
@@ -51,11 +51,21 @@ int main(int argc, char** argv) {
 
     auto result = algorithm->solve(problem);
 
-    Nonogram::Printer printer;
-    printer.print(&problem, &result.solution);
+    if (flags.contains("steps")) {
+        size_t i = 0;
 
-    cout << "Errors: " << result.result << " in " << result.iterations << " iterations" << endl;
-    cout << "Result hash: " << result.solution.hash() << endl;
+        for (auto &it: result.history) {
+            cout << "i=" << i << ",e=" << it.first << ",h=" << it.second << endl;
+
+            i++;
+        }
+    } else {
+        Nonogram::Printer printer;
+        printer.print(&problem, &result.solution);
+
+        cout << "Errors: " << result.result << " in " << result.history.size() << " iterations" << endl;
+        cout << "Result hash: " << result.solution.hash() << endl;
+    }
 
     return 0;
 }
