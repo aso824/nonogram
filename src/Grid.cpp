@@ -28,31 +28,13 @@ Nonogram::Grid::Grid(const Nonogram::Grid &from) {
     this->_size = from.size();
 }
 
-Nonogram::Grid::Grid(const std::string hash, unsigned short size) {
+Nonogram::Grid::Grid(const std::vector<bool> &bits, unsigned short size) {
+    if (bits.size() != size * size) {
+        throw std::invalid_argument("Vector invalid size, expected " + std::to_string(size * size) + ", got " + std::to_string(bits.size()));
+    }
+
     this->_size = size;
     this->values = std::make_unique<vec2d>();
-
-    std::vector<bool> bits;
-
-    for (const char& hex: hash) {
-        uint8_t byte = 0;
-
-        if (hex >= '0' && hex <= '9') {
-            byte = hex - '0';
-        }
-        else if (hex >= 'A' && hex <= 'F') {
-            byte = hex - 'A' + 10;
-        }
-        else if (hex >= 'a' && hex <= 'f') {
-            byte = hex - 'a' + 10;
-        }
-
-        std::bitset<4> bs(byte);
-
-        for (int i = 3; i >= 0; --i) {
-            bits.push_back(bs[i]);
-        }
-    }
 
     std::vector<bool> line;
 
@@ -114,6 +96,32 @@ std::vector<bool> Nonogram::Grid::horizontal(unsigned short index) {
     return this->values->at(index);
 }
 
+Nonogram::Grid Nonogram::Grid::from_hash(const std::string hash, unsigned short size) {
+    std::vector<bool> bits;
+
+    for (const char& hex: hash) {
+        uint8_t byte = 0;
+
+        if (hex >= '0' && hex <= '9') {
+            byte = hex - '0';
+        }
+        else if (hex >= 'A' && hex <= 'F') {
+            byte = hex - 'A' + 10;
+        }
+        else if (hex >= 'a' && hex <= 'f') {
+            byte = hex - 'a' + 10;
+        }
+
+        std::bitset<4> bs(byte);
+
+        for (int i = 3; i >= 0; --i) {
+            bits.push_back(bs[i]);
+        }
+    }
+
+    return { bits, size };
+}
+
 Nonogram::Grid Nonogram::Grid::random(unsigned short size, std::mt19937 rgen) {
     vec2d values;
 
@@ -135,13 +143,7 @@ Nonogram::Grid Nonogram::Grid::random(unsigned short size, std::mt19937 rgen) {
 std::string Nonogram::Grid::hash() {
     std::ostringstream oss;
 
-    // Grid to single vector
-    std::vector<bool> bits;
-    for (auto &it: *values) {
-        for (auto bit: it) {
-            bits.push_back(bit);
-        }
-    }
+    auto bits = this->binary();
 
     // Right pad zeroes
     for (size_t i = 0; i < (bits.size() % 4); i++) {
@@ -160,6 +162,18 @@ std::string Nonogram::Grid::hash() {
     }
 
     return oss.str();
+}
+
+std::vector<bool> Nonogram::Grid::binary() {
+    std::vector<bool> bits;
+
+    for (auto &it: *values) {
+        for (auto bit: it) {
+            bits.push_back(bit);
+        }
+    }
+
+    return bits;
 }
 
 

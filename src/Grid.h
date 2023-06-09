@@ -21,7 +21,7 @@ namespace Nonogram {
             Grid(unsigned short size);
             Grid(const vec2d &values);
             Grid(const Grid &from);
-            Grid(const std::string hash, unsigned short size);
+            Grid(const std::vector<bool> &bits, unsigned short size);
 
             Grid& operator=(const Grid& from);
 
@@ -35,7 +35,9 @@ namespace Nonogram {
             unsigned short size() const { return this->_size; }
 
             std::string hash();
+            std::vector<bool> binary();
 
+            static Grid from_hash(const std::string hash, unsigned short size);
             static Grid random(unsigned short size, std::mt19937 rgen);
     };
 }
