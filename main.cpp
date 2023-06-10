@@ -9,6 +9,7 @@
 #include "src/Heuristic/Hillclimb.h"
 #include "src/Heuristic/RandomHillclimb.h"
 #include "src/Heuristic/Genetic.h"
+#include "src/Heuristic/Tabu.h"
 
 using namespace std;
 
@@ -46,6 +47,8 @@ int main(int argc, char** argv) {
         algorithm = make_unique<Nonogram::RandomHillclimb>();
     } else if (algo == "genetic") {
         algorithm = make_unique<Nonogram::Genetic>();
+    } else if (algo == "tabu") {
+        algorithm = make_unique<Nonogram::Tabu>();
     } else {
         cout << "Unknown algorithm" << endl;
 

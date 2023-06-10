@@ -119,6 +119,11 @@ Nonogram::Grid Nonogram::Grid::from_hash(const std::string hash, unsigned short 
         }
     }
 
+    // Remove padding
+    while (bits.size() > size * size) {
+        bits.pop_back();
+    }
+
     return { bits, size };
 }
 
