@@ -20,7 +20,7 @@ namespace Nonogram {
             void randomModify(Grid& solution);
 
             const int pop_size = 200;
-            const int iterations = 25;
+            const int iterations = 50;
             const double p_crossover = 0.4;
             const double p_mutation = 0.3;
     };
